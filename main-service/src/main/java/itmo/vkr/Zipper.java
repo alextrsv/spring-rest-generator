@@ -9,9 +9,8 @@ import java.util.zip.ZipOutputStream;
 
 public class Zipper {
 
-    public static void main(String[] args) throws IOException {
-        String sourceFile = "E:\\ITMO\\ВКР\\Code\\GenServ\\main-service\\src\\main\\resources\\GeneratedService";
-        FileOutputStream fos = new FileOutputStream("dirCompressed.zip");
+    public static void zipSourceToArchive(String sourceFile, String archiveFile) throws IOException {
+        FileOutputStream fos = new FileOutputStream(archiveFile);
         ZipOutputStream zipOut = new ZipOutputStream(fos);
         File fileToZip = new File(sourceFile);
 

@@ -1,10 +1,16 @@
 package itmo.vkr.editors;
 
-import java.io.*;
+import org.springframework.stereotype.Component;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+@Component
 public class JaxBSourseEditor implements SourceEditor {
 
     @Override

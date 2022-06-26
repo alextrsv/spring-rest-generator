@@ -1,8 +1,7 @@
 package itmo.vkr.controllers;
 
 
-import itmo.vkr.Main;
-import itmo.vkr.Services.MainService;
+import itmo.vkr.services.GeneratorService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,21 +15,19 @@ import java.io.IOException;
 @CrossOrigin
 @RestController
 @RequestMapping("/generator")
-public class MainController {
+public class GeneratorController {
 
-    final MainService mainService;
+    final GeneratorService generatorService;
 
-    public MainController(MainService mainService) {
-        this.mainService = mainService;
+    public GeneratorController(GeneratorService generatorService) {
+        this.generatorService = generatorService;
     }
-
 
 
     @GetMapping("generated-project")
     public ResponseEntity<Resource> generateProject() throws IOException {
 
-        Main.main(null);
-        Resource resource = mainService.downloadGeneratedProject().get();
+        Resource resource = generatorService.downloadGeneratedProject().get();
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
@@ -41,7 +38,7 @@ public class MainController {
 
     @PostMapping("xsd")
     public ResponseEntity<String> uploadXSDFile(@RequestParam("file") MultipartFile file){
-        return mainService.uploadXSDFile(file) ? ResponseEntity.ok("uploaded") : new ResponseEntity<>("some troubles", HttpStatus.INTERNAL_SERVER_ERROR);
+        return generatorService.uploadXSDFile(file) ? ResponseEntity.ok("uploaded") : new ResponseEntity<>("some troubles", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
 
