@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet" href="//cdn.webix.com/edge/webix.css" type="text/css" media="screen" charset="utf-8">
+    <script src="//cdn.webix.com/edge/webix.js" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript" src="libs/webix/ace.js"></script>
+
+</head>
+<body bgcolor="#c0c0c0">
+
+<div id="head" style="
+    margin: 1em 0 0 0;
+    color: #343434;
+    font-weight: normal;
+    font-family: 'Ultra', sans-serif;
+    font-size: 36px;
+    line-height: 42px;
+    text-transform: uppercase;
+    text-shadow: 0 2px white, 0 3px #1a234f;
+    background-color: #064b96;">
+    <h1 align="center">GenServ</h1>
+</div>
+
+
+<div id="content"  style=" margin-top: 3%;" align="center"  bgcolor="#c0c0c0"></div>
+<div id="folder"></div>
+<script type="text/javascript">let content = '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://generated"\n' +
+    '           targetNamespace="http://generated" elementFormDefault="qualified">\n' +
+    '\n' +
+    '    <xs:complexType name="Course">\n' +
+    '        <xs:sequence>\n' +
+    '            <xs:element name="id" type="xs:int"/>\n' +
+    '            <xs:element name="title" type="xs:string"/>\n' +
+    '            <xs:element name="students" type="tns:Student" minOccurs="0" maxOccurs="unbounded"/>\n' +
+    '        </xs:sequence>\n' +
+    '    </xs:complexType>\n' +
+    '\n' +
+    '    <xs:complexType name="Student">\n' +
+    '        <xs:sequence>\n' +
+    '            <xs:element name="id" type="xs:long"/>\n' +
+    '            <xs:element name="lastName" type="xs:string"/>\n' +
+    '            <xs:element name="email" type="xs:string"/>\n' +
+    '            <xs:element name="currentCourse" type="tns:Course" minOccurs="0" maxOccurs="unbounded"/>\n' +
+    '            <xs:element name="university" type="tns:University" />\n' +
+    '        </xs:sequence>\n' +
+    '    </xs:complexType>\n' +
+    '\n' +
+    '    <xs:complexType name="University">\n' +
+    '        <xs:sequence>\n' +
+    '            <xs:element name="id" type="xs:long"/>\n' +
+    '            <xs:element name="name" type="xs:string"/>\n' +
+    '            <xs:element name="address" type="xs:string"/>\n' +
+    '            <xs:element name="students" type="tns:Student" minOccurs="0" maxOccurs="unbounded"/>\n' +
+    '        </xs:sequence>\n' +
+    '    </xs:complexType>\n' +
+    '\n' +
+    '</xs:schema>\n' </script>
+<script type="text/javascript">
+    webix.ready(function(){
+        webix.ui({
+            id: "root",
+            container: "content",
+            height: 600,
+            cols:[
+                {
+                    id: "editor",
+                    body:{
+                        view: "ace-editor",
+                        template: "editor",
+                        theme: "dracula",
+                        mode: "xml",
+                        width: 900,
+                        value: content
+                    }
+                },
+                {
+                    id: "management",
+                    body:{
+                        template: "management",
+                        type:"space",
+                        margin:130,
+                        padding:120,
+                        rows:[
+                            {
+                                view: 'button',
+                                label: 'save .xsd',
+                                inputWidth:300,
+                            },
+                            {
+                                view: 'button',
+                                label: 'generate',
+                                inputWidth:300,
+                                align:"center",
+                                click: function (){
+
+                                    webix.ajax().response("blob").get("http://localhost:8080/generator/generated-project",function(text,data){
+
+
+                                        const blob = new Blob([data], {type:"octet-stream"});
+                                        const href = URL.createObjectURL(blob);
+
+                                        const a = Object.assign(document.createElement("a"), {
+                                            href,
+                                            style: "display:none",
+                                            download: "generated.zip",
+                                        });
+                                        document.body.appendChild(a);
+
+                                        a.click();
+                                        URL.revokeObjectURL(href);
+                                        a.remove();
+                                    });
+                                }
+
+                            }
+                        ]
+                    }
+                }]
+        });
+    });
+</script>
+</body>
+</html>
